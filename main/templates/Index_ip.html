@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <title>Sentiment Analysis</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .centerdiv {
+            height: 15vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .centerdiv a {
+            height: 100px;
+            width: 30px;
+            background-color: #f5f6fa;
+            border-radius: 50px;
+            text-align: center;
+            margin: 5px;
+            line-height: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .centerdiv a i {
+            transition: all 0.3s linear;
+        }
+
+        .centerdiv a:hover i {
+            transform: scale(1.5);
+            color: #f5f6fa;
+        }
+
+        .centerdiv a:before {
+            content: "";
+            width: 120%;
+            height: 120%;
+            position: absolute;
+            top: 90%;
+            left: -50%;
+            background-color: #00a7ff;
+            transform: rotate(60deg);
+        }
+
+        .centerdiv a:hover:before {
+            animation: socialicons 0.8s 1;
+            animation-fill-mode: forwards;
+        }
+
+        .btn-primary {
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+
+        .btn-danger {
+            margin-top: 10px;
+            margin-left: 10px;
+            border-radius: 10px;
+        }
+
+        /* Custom styles */
+        .search-box-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            transition: height 0.3s ease;
+            overflow: hidden;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            border: none;
+            font-size: 16px;
+            padding: 5px;
+            height: 40px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .search-button {
+            padding: 12px 20px;
+            width: 200px;
+            margin: 0 5px;
+            border-radius: 10px;
+        }
+
+        .search-button[type="reset"] {
+            background-color: #ccc;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        .expanded {
+            height: auto;
+        }
+
+        /* Custom styles for copy buttons */
+        .copy-button {
+            background-color: #f5f6fa;
+            color: #888888;
+            border: none;
+            border-radius: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .copy-button:hover {
+            background-color: #e9ecef;
+        }
+
+        p.custom-padding {
+    padding: 100px;
+}
+
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="wrapper">
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-10 col-sm-6 mx-auto">
+                <form class="" action="/predict" method="post">
+
+                    <div class="search-box-container">
+                        <div class="search-box">
+                            <input type="text" name="sentiment" id="sentiment" class="search-input"
+                                   placeholder="Enter Review" oninput="validateInput()">
+                        </div>
+                    </div>
+                    <div class="button-container">
+                        <input type="submit" class="btn btn-primary search-button" id="submitBtn" value="Submit"
+                               disabled>
+                        <input type="reset" class="btn btn-danger search-button" value="Reset" onclick="resetForm()">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-10 col-sm-6 mx-auto">
+                <div class="copy-button-container">
+                    <p>
+                        <button class="copy-button" onclick="copyText('Tablet had trouble from the beginning, it kept restarting and rebooting. I had to return it.')">
+                            Copy
+                        </button>
+                        &nbsp;&nbsp;&nbsp;Tablet had trouble from the beginning, it kept restarting and rebooting. I had to return it.
+                    </p>
+                </div>
+                <div class="copy-button-container">
+                    <p>
+                        <button class="copy-button" onclick="copyText('Nice tablet but as usual with these items no instructions on how to get started.')">
+                            Copy
+                        </button>
+                        &nbsp;&nbsp;&nbsp;Nice tablet but as usual with these items no instructions on how to get started.
+                    </p>
+                </div>
+                <div class="copy-button-container">
+                    <p>
+                        <button class="copy-button" onclick="copyText('Easy to use, great battery life, plenty of space and amazing screen quality.')">
+                            Copy
+                        </button>
+                        &nbsp;&nbsp;&nbsp;Easy to use, great battery life, plenty of space and amazing screen quality.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const searchBox = document.querySelector('.search-box');
+    const searchInput = document.querySelector('.search-input');
+    const submitBtn = document.querySelector('#submitBtn');
+
+    function validateInput() {
+        if (searchInput.value.trim() !== '') {
+            submitBtn.disabled = false;
+        } else {
+            submitBtn.disabled = true;
+        }
+    }
+
+    function resetForm() {
+        submitBtn.disabled = true;
+    }
+
+    searchInput.addEventListener('input', function () {
+        searchBox.classList.toggle('expanded', searchInput.scrollHeight > searchInput.clientHeight);
+        validateInput();
+    });
+
+    function copyText(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+    }
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <script src="https://kit.fontawesome.com/bb46a8da97.js" crossorigin="anonymous"></script>
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="./templates/Decor.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS styles remain the same */
+    </style>
+    <script>
+        function populateReview(reviewText) {
+            document.getElementById('review').value = reviewText;
+        }
+
+        function submitForm() {
+            var reviewInput = document.getElementById('review').value.trim();
+            if (reviewInput === '') {
+                alert('Please enter a review before submitting.');
+                return false; // Prevent form submission
+            }
+            // Add your logic to handle the form submission here
+            // For example, you can call a function or submit the form using AJAX
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="box">
+            <i class="fas fa-comment-alt"></i>
+            <input type="text" name="review" id="review" placeholder="Enter Amazon Review">
+        </div>
+        <button class="bn" onclick="submitForm()">Submit</button>
+    </div>
+
+    <div class="example-reviews">
+        <!-- Example reviews HTML remains the same -->
+    </div>
+</body>
+
+</html>
